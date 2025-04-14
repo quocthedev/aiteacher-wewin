@@ -34,6 +34,12 @@ export const useAITeacher = create((set, get) => ({
       english,
     }));
   },
+  vietnamese: true,
+  setVietnamese: (vietnamese) => {
+    set(() => ({
+      vietnamese,
+    }));
+  },
   speech: "formal",
   setSpeech: (speech) => {
     set(() => ({
@@ -81,7 +87,7 @@ export const useAITeacher = create((set, get) => ({
       }));
       // Get TTS
       const audioRes = await fetch(
-        `/api/tts?teacher=${get().teacher}&text=${message.answer.japanese
+        `/api/tts?teacher=${get().teacher}&text=${message.answer.english
           .map((word) => word.word)
           .join(" ")}`
       );

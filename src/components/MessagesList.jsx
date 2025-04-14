@@ -4,7 +4,9 @@ import { useEffect, useRef } from "react";
 export const MessagesList = () => {
   const messages = useAITeacher((state) => state.messages);
   const playMessage = useAITeacher((state) => state.playMessage);
+  const stopMessage = useAITeacher((state) => state.stopMessage);
   const { currentMessage } = useAITeacher();
+  const vietnamese = useAITeacher((state) => state.vietnamese);
   const english = useAITeacher((state) => state.english);
   const furigana = useAITeacher((state) => state.furigana);
   const classroom = useAITeacher((state) => state.classroom);
@@ -19,20 +21,10 @@ export const MessagesList = () => {
   }, [messages.length]);
 
   const renderEnglish = (englishText) => (
-    <>
-      {english && (
-        <p className="text-4xl inline-block px-2 rounded-sm font-bold bg-clip-text text-transparent bg-gradient-to-br from-blue-300/90 to-white/90">
-          {englishText}
-        </p>
-      )}
-    </>
-  );
-
-  const renderJapanese = (japanese) => (
     <p className="text-white font-bold text-4xl mt-2 font-jp flex flex-wrap gap-1">
-      {japanese.map((word, i) => (
+      {englishText.map((word, i) => (
         <span key={i} className="flex flex-col justify-end items-center">
-          {furigana && word.reading && (
+          {english && word.reading && (
             <span className="text-2xl text-white/65">{word.reading}</span>
           )}
           {word.word}
@@ -40,6 +32,29 @@ export const MessagesList = () => {
       ))}
     </p>
   );
+
+  const renderVietNam = (vietNamText) => (
+    <>
+      {vietnamese && (
+        <p className="text-4xl inline-block px-2 rounded-sm font-bold bg-clip-text text-transparent bg-gradient-to-br from-blue-300/90 to-white/90">
+          {vietNamText}
+        </p>
+      )}
+    </>
+  );
+
+  // const renderJapanese = (japanese) => (
+  //   <p className="text-white font-bold text-4xl mt-2 font-jp flex flex-wrap gap-1">
+  //     {japanese.map((word, i) => (
+  //       <span key={i} className="flex flex-col justify-end items-center">
+  //         {furigana && word.reading && (
+  //           <span className="text-2xl text-white/65">{word.reading}</span>
+  //         )}
+  //         {word.word}
+  //       </span>
+  //     ))}
+  //   </p>
+  // );
 
   return (
     <div
@@ -53,12 +68,7 @@ export const MessagesList = () => {
       {messages.length === 0 && (
         <div className="h-full w-full grid place-content-center text-center">
           <h2 className="text-8xl font-bold text-white/90 italic">
-            Wawa Sensei
-            <br />
-            Japanese Language School
-          </h2>
-          <h2 className="text-8xl font-bold font-jp text-red-600/90 italic">
-            ワワ先生日本語学校
+            Let's code
           </h2>
         </div>
       )}
@@ -76,10 +86,10 @@ export const MessagesList = () => {
                 >
                   {message.speech}
                 </span>
-                {renderEnglish(message.answer.english)}
+                {renderVietNam(message.answer.vietnamese)}
               </div>
 
-              {renderJapanese(message.answer.japanese)}
+              {renderEnglish(message.answer.english)}
             </div>
             {currentMessage === message ? (
               <button
@@ -142,15 +152,15 @@ export const MessagesList = () => {
                 {message.answer.grammarBreakdown.length > 1 && (
                   <>
                     {renderEnglish(grammar.english)}
-                    {renderJapanese(grammar.japanese)}
+                    {/* {renderJapanese(grammar.japanese)} */}
                   </>
                 )}
-
                 <div className="mt-3 flex flex-wrap gap-3 items-end">
                   {grammar.chunks.map((chunk, i) => (
                     <div key={i} className="p-2 bg-black/30 rounded-md">
                       <p className="text-white/90 text-4xl font-jp">
-                        {renderJapanese(chunk.japanese)}
+                        {/* {renderJapanese(chunk.japanese)} */}
+                        {renderEnglish(chunk.english)}
                       </p>
                       <p className="text-pink-300/90 text-2xl">
                         {chunk.meaning}
@@ -161,6 +171,7 @@ export const MessagesList = () => {
                     </div>
                   ))}
                 </div>
+                -
               </div>
             ))}
           </div>

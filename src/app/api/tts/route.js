@@ -6,13 +6,13 @@ export async function GET(req) {
   // WARNING: If you host publicly your project, add an authentication layer to limit the consumption of Azure resources
 
   const speechConfig = sdk.SpeechConfig.fromSubscription(
-    process.env["SPEECH_KEY"],
-    process.env["SPEECH_REGION"]
+    process.env["SPEECH_AZURE_KEY"],
+    process.env["SPEECH_AZURE_REGION"]
   );
 
   // https://learn.microsoft.com/en-us/azure/ai-services/speech-service/language-support?tabs=tts
-  const teacher = req.nextUrl.searchParams.get("teacher") || "Nanami";
-  speechConfig.speechSynthesisVoiceName = `ja-JP-${teacher}Neural`;
+  const teacher = "AvaMultilingual" || req.nextUrl.searchParams.get("teacher");
+  speechConfig.speechSynthesisVoiceName = `en-US-${teacher}Neural`;
 
   const speechSynthesizer = new sdk.SpeechSynthesizer(speechConfig);
   const visemes = [];

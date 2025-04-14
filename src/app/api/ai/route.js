@@ -5,49 +5,54 @@ const openai = new OpenAI({
 });
 
 const formalExample = {
-  japanese: [
-    { word: "日本", reading: "にほん" },
-    { word: "に" },
-    { word: "住んで", reading: "すんで" },
-    { word: "います" },
-    { word: "か" },
+  english: [
+    { word: "Do" },
+    { word: "you" },
+    { word: "live" },
+    { word: "in" },
+    { word: "America" },
     { word: "?" },
   ],
   grammarBreakdown: [
     {
-      english: "Do you live in Japan?",
-      japanese: [
-        { word: "日本", reading: "にほん" },
-        { word: "に" },
-        { word: "住んで", reading: "すんで" },
-        { word: "います" },
-        { word: "か" },
+      vietnamese: "Bạn có sống ở Mỹ không?",
+      english: [
+        { word: "Do" },
+        { word: "you" },
+        { word: "live" },
+        { word: "in" },
+        { word: "America" },
         { word: "?" },
       ],
       chunks: [
         {
-          japanese: [{ word: "日本", reading: "にほん" }],
-          meaning: "Japan",
-          grammar: "Noun",
+          english: [{ word: "Do" }],
+          meaning: "used to form a question",
+          grammar: "Auxiliary Verb",
         },
         {
-          japanese: [{ word: "に" }],
-          meaning: "in",
-          grammar: "Particle",
+          english: [{ word: "you" }],
+          meaning: "the person being spoken to",
+          grammar: "Pronoun",
         },
         {
-          japanese: [{ word: "住んで", reading: "すんで" }, { word: "います" }],
-          meaning: "live",
-          grammar: "Verb + て form + います",
+          english: [{ word: "live" }],
+          meaning: "to reside",
+          grammar: "Main Verb",
         },
         {
-          japanese: [{ word: "か" }],
-          meaning: "question",
-          grammar: "Particle",
+          english: [{ word: "in" }],
+          meaning: "indicating location",
+          grammar: "Preposition",
         },
         {
-          japanese: [{ word: "?" }],
-          meaning: "question",
+          english: [{ word: "America" }],
+          meaning: "a country in North America",
+          grammar: "Proper Noun",
+        },
+        {
+          english: [{ word: "?" }],
+          meaning: "question punctuation",
           grammar: "Punctuation",
         },
       ],
@@ -56,49 +61,54 @@ const formalExample = {
 };
 
 const casualExample = {
-  japanese: [
-    { word: "日本", reading: "にほん" },
-    { word: "に" },
-    { word: "住んで", reading: "すんで" },
-    { word: "いる" },
-    { word: "の" },
+  english: [
+    { word: "Do" },
+    { word: "you" },
+    { word: "live" },
+    { word: "in" },
+    { word: "America" },
     { word: "?" },
   ],
   grammarBreakdown: [
     {
-      english: "Do you live in Japan?",
-      japanese: [
-        { word: "日本", reading: "にほん" },
-        { word: "に" },
-        { word: "住んで", reading: "すんで" },
-        { word: "いる" },
-        { word: "の" },
+      vietnamese: "Bạn có sống ở Mỹ không?",
+      englishWords: [
+        { word: "Do" },
+        { word: "you" },
+        { word: "live" },
+        { word: "in" },
+        { word: "America" },
         { word: "?" },
       ],
       chunks: [
         {
-          japanese: [{ word: "日本", reading: "にほん" }],
-          meaning: "Japan",
-          grammar: "Noun",
+          english: [{ word: "Do" }],
+          meaning: "used to form a question",
+          grammar: "Auxiliary Verb",
         },
         {
-          japanese: [{ word: "に" }],
-          meaning: "in",
-          grammar: "Particle",
+          english: [{ word: "you" }],
+          meaning: "the person being spoken to",
+          grammar: "Pronoun",
         },
         {
-          japanese: [{ word: "住んで", reading: "すんで" }, { word: "いる" }],
-          meaning: "live",
-          grammar: "Verb + て form + いる",
+          english: [{ word: "live" }],
+          meaning: "to reside",
+          grammar: "Main Verb",
         },
         {
-          japanese: [{ word: "の" }],
-          meaning: "question",
-          grammar: "Particle",
+          english: [{ word: "in" }],
+          meaning: "indicating location",
+          grammar: "Preposition",
         },
         {
-          japanese: [{ word: "?" }],
-          meaning: "question",
+          english: [{ word: "America" }],
+          meaning: "a country in North America",
+          grammar: "Proper Noun",
+        },
+        {
+          english: [{ word: "?" }],
+          meaning: "question punctuation",
           grammar: "Punctuation",
         },
       ],
@@ -117,12 +127,12 @@ export async function GET(req) {
     messages: [
       {
         role: "system",
-        content: `You are a Japanese language teacher. 
-Your student asks you how to say something from english to japanese.
+        content: `You are a English language teacher. 
+Your student asks you how to say something from vietnamese to english.
 You should respond with: 
-- english: the english version ex: "Do you live in Japan?"
-- japanese: the japanese translation in split into words ex: ${JSON.stringify(
-          speechExample.japanese
+- vietnamese: the vietnamese version ex: "Bạn có sống ở nhật không?"
+- english: the english translation in split into words ex: ${JSON.stringify(
+          speechExample.english
         )}
 - grammarBreakdown: an explanation of the grammar structure per sentence ex: ${JSON.stringify(
           speechExample.grammarBreakdown
@@ -133,19 +143,19 @@ You should respond with:
         role: "system",
         content: `You always respond with a JSON object with the following format: 
         {
-          "english": "",
-          "japanese": [{
+          "vietnamese": "",
+          "english": [{
             "word": "",
             "reading": ""
           }],
           "grammarBreakdown": [{
-            "english": "",
-            "japanese": [{
+            "vietnamese": "",
+            "english": [{
               "word": "",
               "reading": ""
             }],
             "chunks": [{
-              "japanese": [{
+              "english": [{
                 "word": "",
                 "reading": ""
               }],
@@ -159,8 +169,8 @@ You should respond with:
         role: "user",
         content: `How to say ${
           req.nextUrl.searchParams.get("question") ||
-          "Have you ever been to Japan?"
-        } in Japanese in ${speech} speech?`,
+          "Bạn có bao giờ đi nước ngoài?"
+        } in English in ${speech} speech?`,
       },
     ],
     // model: "gpt-4-turbo-preview", // https://platform.openai.com/docs/models/gpt-4-and-gpt-4-turbo
